@@ -7,7 +7,7 @@ type Hub struct {
 	unregister chan *client
 }
 
-var hub = &Hub{clients: make(map[*client]bool)}
+var hub = &Hub{clients: make(map[*client]bool), broadcast: make(chan []byte), register: make(chan *client), unregister: make(chan *client)}
 
 func (h *Hub) run() {
 	for {

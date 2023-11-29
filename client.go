@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
 )
@@ -11,7 +12,7 @@ type client struct {
 	hub  *Hub
 }
 
-var upgrader = websocket.Upgrader{
+var upgrader = &websocket.Upgrader{
 	ReadBufferSize:  512,
 	WriteBufferSize: 512,
 	CheckOrigin: func(r *http.Request) bool {
@@ -26,13 +27,26 @@ func serverWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	client := &client{hub: hub, conn: conn, send: make(chan []byte)}
 	hub.register <- client
-	go client.readPump()
-	go client.writePump()
+	//go client.writePump()
+	for {
+		_, message, err := conn.ReadMessage()
+		fmt.Println("readmessage", message)
+		if err != nil {
+			panic(err)
+		}
+		hub.broadcast <- message
+	}
+
 }
 
 func (c *client) readPump() {
+	defer func() {
+		fmt.Println("end readPump")
+	}()
+
 	for {
 		_, message, err := c.conn.ReadMessage()
+		fmt.Println("readmessage", message)
 		if err != nil {
 			panic(err)
 		}
@@ -41,6 +55,9 @@ func (c *client) readPump() {
 }
 
 func (c *client) writePump() {
+	defer func() {
+		print("end writePump")
+	}()
 	for {
 		select {
 		case bytes, ok := <-c.send:
