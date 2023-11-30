@@ -27,15 +27,8 @@ func serverWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	client := &client{hub: hub, conn: conn, send: make(chan []byte)}
 	hub.register <- client
-	//go client.writePump()
-	for {
-		_, message, err := conn.ReadMessage()
-		fmt.Println("readmessage", message)
-		if err != nil {
-			panic(err)
-		}
-		hub.broadcast <- message
-	}
+	go client.writePump()
+	go client.readPump()
 
 }
 
@@ -46,9 +39,9 @@ func (c *client) readPump() {
 
 	for {
 		_, message, err := c.conn.ReadMessage()
-		fmt.Println("readmessage", message)
 		if err != nil {
-			panic(err)
+			c.conn.Close()
+			break
 		}
 		c.hub.broadcast <- message
 	}

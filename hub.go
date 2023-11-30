@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Hub struct {
 	clients    map[*client]bool
 	broadcast  chan []byte
@@ -14,6 +16,7 @@ func (h *Hub) run() {
 		select {
 		case client := <-h.register:
 			h.clients[client] = true
+			fmt.Println("newClient", client)
 		case bytes := <-h.broadcast:
 			for client := range h.clients {
 				client.send <- bytes
