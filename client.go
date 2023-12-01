@@ -39,6 +39,7 @@ func (c *client) readPump() {
 
 	for {
 		_, message, err := c.conn.ReadMessage()
+		// todo here case when
 		if err != nil {
 			c.conn.Close()
 			break
