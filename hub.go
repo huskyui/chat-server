@@ -7,6 +7,7 @@ type Hub struct {
 	broadcast  chan []byte
 	register   chan *client
 	unregister chan *client
+	login      chan *client
 }
 
 var hub = &Hub{
@@ -14,6 +15,7 @@ var hub = &Hub{
 	broadcast:  make(chan []byte),
 	register:   make(chan *client),
 	unregister: make(chan *client),
+	login:      make(chan *client),
 }
 
 func (h *Hub) run() {
