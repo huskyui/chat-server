@@ -25,7 +25,7 @@ var upgrader = &websocket.Upgrader{
 }
 
 func Websocket(context *gin.Context) {
-	serverWs(WebSocketHub, context.Writer, context.Request)
+	serverWs(WebsocketHub(), context.Writer, context.Request)
 }
 
 func serverWs(hub *Hub, w http.ResponseWriter, r *http.Request) {

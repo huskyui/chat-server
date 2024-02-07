@@ -12,12 +12,16 @@ type Hub struct {
 	login      chan *client
 }
 
-var WebSocketHub = &Hub{
+var hub = &Hub{
 	clients:    make(map[*client]bool),
 	broadcast:  make(chan []byte),
 	register:   make(chan *client),
 	unregister: make(chan *client),
 	login:      make(chan *client),
+}
+
+func WebsocketHub() *Hub {
+	return hub
 }
 
 func (h *Hub) Run() {

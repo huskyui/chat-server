@@ -9,7 +9,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	go websocket.WebSocketHub.Run()
+	go websocket.WebsocketHub().Run()
 
 	r.GET("/ping", common.Ping)
 	r.GET("/upload", common.UploadFile)
