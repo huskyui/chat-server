@@ -1,8 +1,9 @@
-package main
+package websocket
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -21,6 +22,10 @@ var upgrader = &websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
+}
+
+func Websocket(context *gin.Context) {
+	serverWs(WebSocketHub, context.Writer, context.Request)
 }
 
 func serverWs(hub *Hub, w http.ResponseWriter, r *http.Request) {

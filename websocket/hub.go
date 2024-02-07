@@ -1,6 +1,8 @@
-package main
+package websocket
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Hub struct {
 	clients    map[*client]bool
@@ -10,7 +12,7 @@ type Hub struct {
 	login      chan *client
 }
 
-var hub = &Hub{
+var WebSocketHub = &Hub{
 	clients:    make(map[*client]bool),
 	broadcast:  make(chan []byte),
 	register:   make(chan *client),
@@ -18,7 +20,7 @@ var hub = &Hub{
 	login:      make(chan *client),
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:

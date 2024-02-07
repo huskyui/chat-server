@@ -1,4 +1,4 @@
-package main
+package websocket
 
 type Message struct {
 	Type    string `json:"type"`
